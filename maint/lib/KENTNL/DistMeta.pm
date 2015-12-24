@@ -89,7 +89,6 @@ sub main_module_like_distname {
         carp "Guessed main module is $expected_module";
         return $expected_module;
     }
-    carp( join qq[\n], pm_files($libdir) );
     croak(
 "No file matching $expected_file, can't guess main module, \"name\" => correct?"
     );
