@@ -116,11 +116,11 @@ sub name {
 }
 
 sub authors {
-    return @{ $_[0]->{authors} ||= ( $_[0]->distmeta->{authors} || [] ) };
+    return ( $_[0]->{authors} ||= ( $_[0]->distmeta->{authors} || [] ) );
 }
 
 sub author {
-    return ( $_[0]->{author} ||= join q[, ], $_[0]->authors );
+    return ( $_[0]->{author} ||= join q[, ], @{ $_[0]->authors } );
 }
 
 sub version_check {
