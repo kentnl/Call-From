@@ -1,21 +1,14 @@
 #!/usr/bin/env perl
 # ABSTRACT: Generate a Makefile.PL from a cpanfile
 
-use Path::Tiny qw( path );
 use Data::Dumper qw( Dumper );
-use JSON::MaybeXS;
-use Module::CPANfile;
 
 use lib 'maint/lib';
 
 use KENTNL::DumpAs qw( dump_as );
 use KENTNL::DistMeta;
 
-my $json     = JSON::MaybeXS->new( { utf8 => 1, } );
 my $distmeta = KENTNL::DistMeta->new();
-my $cpanfile = Module::CPANfile->load('cpanfile');
-
-my $prereqs = $cpanfile->prereqs;
 
 my $perl_prereq = $distmeta->perl_prereq;
 
