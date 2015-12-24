@@ -27,7 +27,8 @@ my %TDATA = (
         '*WriteMakefileArgs' => {
             DISTNAME => $distmeta->name,
             NAME     => $distmeta->main_module,
-            AUTHOR   => $distmeta->author
+            AUTHOR   => $distmeta->author,
+            ABSTRACT => $distmeta->abstract,
         }
     ),
 );

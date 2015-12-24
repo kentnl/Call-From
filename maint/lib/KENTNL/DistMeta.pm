@@ -9,7 +9,7 @@ package KENTNL::DistMeta;
 use JSON::MaybeXS qw();
 use Path::Tiny qw( path );
 use KENTNL::PMFiles qw( pm_files );
-use KENTNL::NameShift qw( path_to_module module_to_distname );
+use KENTNL::NameShift qw( path_to_module module_to_distname module_to_path );
 use Carp qw( croak carp );
 use Module::CPANfile;
 
@@ -58,7 +58,15 @@ sub distmeta {
 }
 
 sub abstract {
-  return ( $_[0]->{abstract} ||= ( $_[0]->distmeta->{abstract} or $_[0]->abstract_from_main_module ));
+    return ( $_[0]->{abstract} ||=
+          ( $_[0]->distmeta->{abstract} or $_[0]->abstract_from_main_module ) );
+}
+
+sub abstract_from_main_module {
+    require KENTNL::Abstracts;
+    return KENTNL::Abstracts::abstract_from_file(
+        module_to_path( $_[0]->main_module, $_[0]->libdir ) );
+
 }
 
 sub main_module {
