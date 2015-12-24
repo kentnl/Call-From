@@ -23,11 +23,17 @@ my %EUMM_META = (
     LICENSE            => $distmeta->license_object->meta_yml_name,
     CONFIGURE_REQUIRES => $required->{configure},
     PREREQ_PM          => $required->{runtime},
+    test               => {
+        TESTS => ( join q{ }, map { "$_/.*" } @{ $distmeta->test_dirs } )
+    },
 );
 
 $EUMM_META->{BUILD_REQUIRES} = $required->{build}
   if keys %{ $required->{build} };
 $EUMM_META->{TEST_REQUIRES} = $required->{test} if keys %{ $required->{test} };
+$EUMM_META->{MIN_PERL_VERSION} = $perl_prereq if $perl_prereq;
+
+%EUMM_META = ( %EUMM_META, %{ $distmeta->eumm_extra } );
 
 my %TDATA = (
     generated_by => 'maint/gen_makefile_pl.pl',

@@ -9,6 +9,7 @@ package KENTNL::DistMeta;
 use JSON::MaybeXS qw();
 use Path::Tiny qw( path );
 use KENTNL::PMFiles qw( pm_files );
+use KENTNL::TestDirs qw();
 use KENTNL::NameShift qw( path_to_module module_to_distname module_to_path );
 use Carp qw( croak carp );
 use Module::CPANfile;
@@ -27,6 +28,12 @@ sub libdir {
     my $libdir = ( $_[0]->{libdir} ||= './lib' );
     $libdir =~ s/\/?$//;
     return $libdir;
+}
+
+sub testdir {
+    my $testdir = ( $_[0]->{testdir} || './t' );
+    $testdir =~ s/\/?$//;
+    return $testdir;
 }
 
 sub cpanfile {
@@ -204,7 +211,12 @@ sub copyright_year {
           ( $_[0]->distmeta->{copyright_year} or (localtime)[5] + 1900 ) );
 }
 
+sub eumm_extra {
+   return ( $_[0]->{eumm_extra} ||= ( $_[0]->distmeta->{eumm_extra} or {} ) )
+}
 
-
+sub test_dirs {
+  return ( $_[0]->{test_dirs} ||= [ KENTNL::TestDirs::test_dirs( $_[0]->testdir ) ] );
+}
 1;
 
