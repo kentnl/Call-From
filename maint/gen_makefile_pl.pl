@@ -29,6 +29,7 @@ my %TDATA = (
             NAME     => $distmeta->main_module,
             AUTHOR   => $distmeta->author,
             ABSTRACT => $distmeta->abstract,
+            VERSION  => $distmeta->version,
         }
     ),
 );

@@ -124,5 +124,41 @@ sub author {
     return ( $_[0]->{author} ||= join q[, ], $_[0]->authors );
 }
 
+sub version_check {
+    my ( $self, $version ) = @_;
+    $_[0]->{version_check} ||= sub {
+        my ($orig_version) = @_;
+        if ( $orig_version !~ /\A\d+[.]\d{6}\z/ ) {
+            croak("$orig_version is does not match \\d+ . \\d{6}");
+        }
+        return $orig_version;
+    };
+    return $_[0]->{version_check}->($version);
+}
+
+sub version {
+    return $_[0]->version_check(
+        $_[0]->{version} ||= (
+                 $_[0]->version_from_env
+              or $_[0]->distmeta->{version}
+              or $_[0]->version_from_main_module
+        )
+    );
+}
+
+sub version_from_env {
+    return $ENV{V} if defined $ENV{V};
+    return;
+}
+
+sub version_from_main_module {
+    require Module::Metadata;
+    my $mm = Module::Metadata->new_from_file(
+        path_to_module( $_[0]->main_module, $_[0]->libdir ) );
+    ( $mm and defined $mm->version )
+      or croak "Can't extract \$VERSION from " . $_[0]->main_module;
+    return $mm->version();
+}
+
 1;
 
