@@ -159,5 +159,42 @@ sub version_from_main_module {
     return $mm->version();
 }
 
+sub license_class {
+    return $_[0]->{license_class} if $_[0]->{license_class};
+    if ( exists $_[0]->distmeta->{license} ) {
+        if ( $_[0]->distmeta->{license} =~ /^=(.*$)/ ) {
+            return ( $_[0]->{license_class} = "$1" );
+        }
+        return ( $_[0]->{license_class} =
+              "Software::License::" . $_[0]->distmeta->{license} );
+    }
+    croak "license not defined";
+    return;
+}
+
+sub license_object {
+    return $_[0]->{license_object} if $_[0]->{license_object};
+    my $class = $_[0]->license_class;
+    eval "require $class;1" or die $@;
+    return (
+        $_[0]->{license_object} = $class->new(
+            {
+                holder => $_[0]->copyright_holder,
+                year   => $_[0]->copyright_year,
+            }
+        )
+    );
+}
+
+sub copyright_holder {
+    return ( $_[0]->{copyright_holder} ||=
+          ( $_[0]->distmeta->{copyright_holder} or $_[0]->authors->[0] ) );
+}
+
+sub copyright_year {
+    return ( $_[0]->{copyright_year} ||=
+          ( $_[0]->distmeta->{copyright_year} or (localtime)[5] + 1900 ) );
+}
+
 1;
 

@@ -30,6 +30,7 @@ my %TDATA = (
             AUTHOR   => $distmeta->author,
             ABSTRACT => $distmeta->abstract,
             VERSION  => $distmeta->version,
+            LICENSE  => $distmeta->license_object->meta_yml_name,
         }
     ),
 );
