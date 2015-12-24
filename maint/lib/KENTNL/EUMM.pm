@@ -14,7 +14,7 @@ sub new {
 }
 
 sub template_name {
-    return ( $_[0]->{template_name} ||= './maint/eumm.tpl' );
+    return ( $_[0]->{template_name} ||= 'maint/eumm.tpl' );
 }
 
 sub distmeta {
@@ -107,7 +107,7 @@ sub build_writemakefile_args {
         CONFIGURE_REQUIRES => $required->{configure},
         PREREQ_PM          => $required->{runtime},
         test               => {
-            TESTS => ( join q{ }, map { "$_/.*" } @{ $distmeta->test_dirs } )
+            TESTS => ( join q{ }, map { "$_/*.t" } @{ $distmeta->test_dirs } )
         },
     );
     $EUMM_META{BUILD_REQUIRES} = $required->{build}

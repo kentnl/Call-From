@@ -12,4 +12,4 @@ use Path::Tiny qw( path );
 my $distmeta = KENTNL::DistMeta->new();
 my $eumm = KENTNL::EUMM->new( distmeta => $distmeta );
 
-path('./Makefile.PL')->spew_raw( $eumm->filled_template );
+path('Makefile.PL')->spew_raw( $eumm->filled_template );

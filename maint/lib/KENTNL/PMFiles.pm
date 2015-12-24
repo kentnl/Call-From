@@ -16,7 +16,7 @@ $rule->file;
 $rule->name(qr/.*\.pm$/);
 
 sub pm_files {
-  return $rule->all( $_[0] || './lib' );
+  return $rule->all( $_[0] || 'lib' );
 }
 1;
 

@@ -16,7 +16,7 @@ $rule->file;
 $rule->name(qr/.*\.t$/);
 
 sub test_files {
-    return $rule->all( $_[0] || './t' );
+    return $rule->all( $_[0] || 't' );
 }
 
 sub test_dirs {

@@ -21,23 +21,23 @@ sub new {
 }
 
 sub filename {
-    return ( $_[0]->{filename} ||= './maint/distmeta.json' );
+    return ( $_[0]->{filename} ||= 'maint/distmeta.json' );
 }
 
 sub libdir {
-    my $libdir = ( $_[0]->{libdir} ||= './lib' );
+    my $libdir = ( $_[0]->{libdir} ||= 'lib' );
     $libdir =~ s/\/?$//;
     return $libdir;
 }
 
 sub testdir {
-    my $testdir = ( $_[0]->{testdir} || './t' );
+    my $testdir = ( $_[0]->{testdir} || 't' );
     $testdir =~ s/\/?$//;
     return $testdir;
 }
 
 sub cpanfile {
-    return ( $_[0]->{cpanfile} ||= './cpanfile' );
+    return ( $_[0]->{cpanfile} ||= 'cpanfile' );
 }
 
 sub cpanfile_data {
@@ -212,11 +212,12 @@ sub copyright_year {
 }
 
 sub eumm_extra {
-   return ( $_[0]->{eumm_extra} ||= ( $_[0]->distmeta->{eumm_extra} or {} ) )
+    return ( $_[0]->{eumm_extra} ||= ( $_[0]->distmeta->{eumm_extra} or {} ) );
 }
 
 sub test_dirs {
-  return ( $_[0]->{test_dirs} ||= [ KENTNL::TestDirs::test_dirs( $_[0]->testdir ) ] );
+    return ( $_[0]->{test_dirs} ||=
+          [ KENTNL::TestDirs::test_dirs( $_[0]->testdir ) ] );
 }
 1;
 
