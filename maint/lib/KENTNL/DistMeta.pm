@@ -43,13 +43,21 @@ sub prereqs {
 }
 
 sub perl_prereq {
+    return $_[0]->{perl_prereq} if $_[0]->{perl_prereq};
+
     my $prereqs = $_[0]->prereqs;
-    $prereqs->requirements_for(qw(runtime requires))
+    my $prereq =
+      $prereqs->requirements_for(qw(runtime requires))
       ->clone->add_requirements(
         $prereqs->requirements_for(qw(configure requires)) )
       ->add_requirements( $prereqs->requirements_for(qw(build requires)) )
       ->add_requirements( $prereqs->requirements_for(qw(test requires)) )
       ->as_string_hash->{perl};
+    if ($prereq) {
+        require version;
+        $prereq = version->parse($prereq)->numify;
+    }
+    return ( $_[0]->{perl_prereq} = $prereq );
 }
 
 sub distmeta {
