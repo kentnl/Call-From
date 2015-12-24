@@ -4,7 +4,7 @@ use warnings;
 
 package KENTNL::DistMeta;
 
-# ABSTRACT: Glue layer around interpreting distmeta.json
+# ABSTRACT: Glue layer around interpreting distmeta.json and cpanfile
 
 use JSON::MaybeXS qw();
 use Path::Tiny qw( path );
@@ -203,6 +203,8 @@ sub copyright_year {
     return ( $_[0]->{copyright_year} ||=
           ( $_[0]->distmeta->{copyright_year} or (localtime)[5] + 1900 ) );
 }
+
+
 
 1;
 
