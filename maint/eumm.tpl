@@ -16,14 +16,14 @@ my {{ $fallback_prereqs }}
 {{ $mutate_config }}
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
-  delete $WriteMakefileArgs{TEST_REQUIRES};
-  delete $WriteMakefileArgs{BUILD_REQUIRES};
-  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
+  delete $WriteMakefile_args{TEST_REQUIRES};
+  delete $WriteMakefile_args{BUILD_REQUIRES};
+  $WriteMakefile_args{PREREQ_PM} = \%FallbackPrereqs;
 }
 
-delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+delete $WriteMakefile_args{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
 
-WriteMakefile(%WriteMakefileArgs);
+WriteMakefile(%WriteMakefile_args);
 
 {{ $postamble }}
