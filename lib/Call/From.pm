@@ -16,13 +16,33 @@ our $_call_from = sub {
 };
 
 sub _to_caller {
-    my ($context) = @_;
-    my (@call)    = caller(1);
-    return ( @{$context}, @call[ scalar @{$context} .. $#call ] )
-      if ref $context;
-    return caller( $context + 1 ) if defined $context and $context =~ /^-?\d+$/;
-    $call[0] = $context if defined $context;
-    return @call;
+    my ($ctx) = @_;
+
+    # Numeric special case first because caller is different
+    if ( defined $ctx and not ref $ctx and $ctx =~ /^-?\d+$/ ) {
+
+        # +1 because this function is internal, and we dont
+        # want Call::From
+        my (@call) = caller( $ctx + 1 );
+        return $call[ 0 .. 2 ];
+    }
+
+    # +1 ...
+    my (@call) = caller(1);
+
+    # _to_caller() returns the calling context of call_method_from
+    return @call[ 0 .. 2 ] if not defined $ctx;
+
+    # _to_caller($name) as with (), but with <package> replaced.
+    return ( $ctx, $call[1], $call[2] ) if not ref $ctx;
+
+    # _to_caller([ pkg, (file,( line)) ]) fills the fields that are missing
+    return (
+        $ctx->[0] || $call[0],    # pkg
+        $ctx->[1] || $call[1],    # file
+        $ctx->[2] || $call[2],    # line
+    );
+
 }
 
 sub _prelude {
