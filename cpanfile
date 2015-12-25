@@ -1,10 +1,21 @@
 on develop => sub {
     requires 'CPAN::Meta::Prereqs';
     requires 'Carp';
+    requires 'Config';
+    requires 'Exporter';
+    requires 'ExtUtils::MM';
+    requires 'ExtUtils::MakeMaker';
+    requires 'ExtUtils::Manifest';
+    requires 'File::Find';
+    requires 'File::Path';
+    requires 'File::Spec';
+    requires 'File::Temp';
+    requires 'Getopt::Long';
     requires 'Module::CPANfile';
     requires 'Module::Metadata';
     requires 'PIR';
     requires 'Perl::PrereqScanner';
+    requires 'base';
     requires 'lib';
     requires 'perl', '5.006';
     requires 'strict';

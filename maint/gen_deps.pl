@@ -41,12 +41,12 @@ my $prereqr = KENTNL::Prereqr->new(
         },
         {
             rule     => PIR->new->perl_file,
-            start_in => ['maint'],
+            start_in => [ 'maint', 'Distar' ],
             deps_to  => [ 'develop', 'requires' ],
         },
         {
             rule        => PIR->new->perl_module,
-            start_in    => ['maint'],
+            start_in    => [ 'maint', 'Distar' ],
             provides_to => ['develop'],
         },
         {
