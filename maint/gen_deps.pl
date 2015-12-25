@@ -64,15 +64,6 @@ my $prereqr = KENTNL::Prereqr->new(
 
 my ( $prereqs, $provided ) = $prereqr->collect;
 
-use Data::Dump qw(pp);
-
-pp(
-    {
-        requires => $prereqr->prereqs->as_string_hash,
-        provides => $provided
-    }
-);
-
 use Module::CPANfile;
 
 my $cpanfile =
