@@ -1,3 +1,13 @@
+requires 'Exporter';
+requires 'strict';
+requires 'warnings';
+
+on test => sub {
+    requires 'Test::More';
+    requires 'strict';
+    requires 'warnings';
+};
+
 on develop => sub {
     requires 'CPAN::Meta::Converter';
     requires 'CPAN::Meta::Prereqs';

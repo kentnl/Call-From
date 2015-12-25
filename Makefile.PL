@@ -19,9 +19,17 @@ my %META = (
                 'ExtUtils::MakeMaker' => 0,
             }
         },
-        build   => { requires => {} },
-        test    => { requires => {} },
-        runtime => { requires => {} },
+        build => { requires => {} },
+        test  => {
+            requires => {
+                'Test::More' => 0,
+            }
+        },
+        runtime => {
+            requires => {
+                'Exporter' => 0,
+            }
+        },
         develop => {
             requires => {
                 'CPAN::Meta::Converter' => 0,
