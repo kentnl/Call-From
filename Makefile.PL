@@ -3,56 +3,73 @@ use warnings FATAL => 'all';
 use 5.006;
 use ExtUtils::MakeMaker;
 
-(do 'maint/Makefile.PL.include' or die $@) unless -f 'META.yml';
+( do 'maint/Makefile.PL.include' or die $@ ) unless -f 'META.yml';
 
-my $DISTNAME = 'Call-From';
+my $DISTNAME    = 'Call-From';
 my $GITHUB_USER = 'kentnl';
 my $GITHUB_REPO = $DISTNAME;
 
 my %META = (
-  name => $DISTNAME,
-  license => 'perl_5',
-  dynamic_config => 0,
-  prereqs => {
-    configure => { requires => {
-      'ExtUtils::MakeMaker'   => 0,
-    } },
-    build => { requires => {
-    } },
-    test => { requires => {
-    } },
-    runtime => { requires => {
-      'perl' => '5.6.0',
-    } },
-    develop => { requires => {
-    } },
-  },
-  resources => {
-    repository => {
-      url => 'git://github.com/' . $GITHUB_USER . '/' . $GITHUB_REPO,
-      web => 'https://github.com/' . $GITHUB_USER . '/' . $GITHUB_REPO,
-      type => 'git',
+    name           => $DISTNAME,
+    license        => 'perl_5',
+    dynamic_config => 0,
+    prereqs        => {
+        configure => {
+            requires => {
+                'ExtUtils::MakeMaker' => 0,
+            }
+        },
+        build => { requires => {} },
+        test  => {
+            requires => {
+                'Test::More' => 0,
+            }
+        },
+        runtime => {
+            requires => {
+                'Exporter' => 0,
+                'perl'     => '5.6.0',
+            }
+        },
+        develop => {
+            requires => {
+                'CPAN::Meta::Prereqs' => 0,
+                'Carp'                => 0,
+                'Module::CPANfile'    => 0,
+                'PIR'                 => 0,
+                'Perl::PrereqScanner' => 0,
+            }
+        },
     },
-    bugtracker => {
-      web =>  'https://github.com/' . $GITHUB_USER . '/' . $GITHUB_REPO . '/issues'
+    resources => {
+        repository => {
+            url  => 'git://github.com/' . $GITHUB_USER . '/' . $GITHUB_REPO,
+            web  => 'https://github.com/' . $GITHUB_USER . '/' . $GITHUB_REPO,
+            type => 'git',
+        },
+        bugtracker => {
+                web => 'https://github.com/'
+              . $GITHUB_USER . '/'
+              . $GITHUB_REPO
+              . '/issues'
+        },
+        license => ['http://dev.perl.org/licenses/'],
     },
-    license => [ 'http://dev.perl.org/licenses/' ],
-  },
 );
 
 my %MM_ARGS = ();
 
 ## BOILERPLATE ###############################################################
 require ExtUtils::MakeMaker;
-(do 'maint/Makefile.PL.include' or die $@) unless -f 'META.yml';
+( do 'maint/Makefile.PL.include' or die $@ ) unless -f 'META.yml';
 
 # have to do this since old EUMM dev releases miss the eval $VERSION line
 my $eumm_version  = eval $ExtUtils::MakeMaker::VERSION;
 my $mymeta        = $eumm_version >= 6.57_02;
 my $mymeta_broken = $mymeta && $eumm_version < 6.57_07;
 
-($MM_ARGS{NAME} = $META{name}) =~ s/-/::/g;
-($MM_ARGS{VERSION_FROM} = "lib/$MM_ARGS{NAME}.pm") =~ s{::}{/}g;
+( $MM_ARGS{NAME}         = $META{name} ) =~ s/-/::/g;
+( $MM_ARGS{VERSION_FROM} = "lib/$MM_ARGS{NAME}.pm" ) =~ s{::}{/}g;
 $META{license} = [ $META{license} ]
   if $META{license} && !ref $META{license};
 $MM_ARGS{LICENSE} = $META{license}[0]
@@ -63,21 +80,23 @@ $MM_ARGS{META_ADD} = { 'meta-spec' => { version => 2 }, %META }
   unless -f 'META.yml';
 
 for (qw(configure build test runtime)) {
-  my $key = $_ eq 'runtime' ? 'PREREQ_PM' : uc $_.'_REQUIRES';
-  my $r = $MM_ARGS{$key} = {
-    %{$META{prereqs}{$_}{requires} || {}},
-    %{delete $MM_ARGS{$key} || {}},
-  };
-  defined $r->{$_} or delete $r->{$_} for keys %$r;
+    my $key = $_ eq 'runtime' ? 'PREREQ_PM' : uc $_ . '_REQUIRES';
+    my $r = $MM_ARGS{$key} = {
+        %{ $META{prereqs}{$_}{requires} || {} },
+        %{ delete $MM_ARGS{$key} || {} },
+    };
+    defined $r->{$_} or delete $r->{$_} for keys %$r;
 }
 
 $MM_ARGS{MIN_PERL_VERSION} = delete $MM_ARGS{PREREQ_PM}{perl} || 0;
 
 delete $MM_ARGS{MIN_PERL_VERSION}
   if $eumm_version < 6.47_01;
-$MM_ARGS{BUILD_REQUIRES} = {%{$MM_ARGS{BUILD_REQUIRES}}, %{delete $MM_ARGS{TEST_REQUIRES}}}
+$MM_ARGS{BUILD_REQUIRES} =
+  { %{ $MM_ARGS{BUILD_REQUIRES} }, %{ delete $MM_ARGS{TEST_REQUIRES} } }
   if $eumm_version < 6.63_03;
-$MM_ARGS{PREREQ_PM} = {%{$MM_ARGS{PREREQ_PM}}, %{delete $MM_ARGS{BUILD_REQUIRES}}}
+$MM_ARGS{PREREQ_PM} =
+  { %{ $MM_ARGS{PREREQ_PM} }, %{ delete $MM_ARGS{BUILD_REQUIRES} } }
   if $eumm_version < 6.55_01;
 delete $MM_ARGS{CONFIGURE_REQUIRES}
   if $eumm_version < 6.51_03;
