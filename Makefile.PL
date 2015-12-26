@@ -78,6 +78,7 @@ $MM_ARGS{NO_MYMETA} = 1
   if $mymeta_broken;
 $MM_ARGS{META_ADD} = { 'meta-spec' => { version => 2 }, %META }
   unless -f 'META.yml';
+$MM_ARGS{test} = { TESTS => "t/*.t t/*/*.t" };
 
 for (qw(configure build test runtime)) {
     my $key = $_ eq 'runtime' ? 'PREREQ_PM' : uc $_ . '_REQUIRES';
