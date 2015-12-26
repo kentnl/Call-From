@@ -24,7 +24,7 @@ sub _to_caller {
         # +1 because this function is internal, and we dont
         # want Call::From
         my (@call) = caller( $ctx + 1 );
-        return $call[ 0 .. 2 ];
+        return @call[ 0 .. 2 ];
     }
 
     # +1 ...
