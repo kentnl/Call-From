@@ -9,106 +9,110 @@ use Test::More;
 
     package KENTNL::Dud;
 
-    sub a_method {
-        my ( $self, @args ) = @_;
-        my (@call) = caller();
-        return {
-            self   => $self,
-            args   => \@args,
-            caller => [ @call[ 0 .. 2 ] ],
-        };
+    sub get_self {
+        return $_[0];
+    }
+
+    sub get_args {
+        return [ @_[ 1 .. $#_ ] ];
+    }
+
+    sub get_caller {
+        return [ caller() ];
+    }
+}
+use constant '_file' => sub { [ caller() ]->[1] }
+  ->();
+
+subtest "call_method_from(0)" => sub {
+    use Call::From qw( call_method_from );
+
+#line 1000
+    my $result = KENTNL::Dud->${ \call_method_from(0) }('get_self');
+#line 33
+    is( $result, 'KENTNL::Dud', 'Invocant passthrough' );
+
+#line 2000
+    $result = KENTNL::Dud->${ \call_method_from(0) }( 'get_args', 1, 2, 3, 4 ),
+#line 38
+      is_deeply( $result, [ 1, 2, 3, 4 ], 'Argument passthrough' );
+
+#line 3000
+    $result = KENTNL::Dud->${ \call_method_from(0) }('get_caller');
+#line 43
+    is_deeply( $result, [ 'main', _file, 3000 ],
+        'Caller transferrance worked' );
+};
+{
+
+    package KENTNL::Mirror;
+    use Call::From qw( call_method_from );
+
+    sub indirect {
+#line 4000
+        return KENTNL::Dud->${ \call_method_from(1) }(@_);
+#line 55
+    }
+
+    sub double_indirect {
+#line 5000
+        return KENTNL::Dud->${ \call_method_from(2) }(@_);
+#line 61
     }
 }
 {
 
-    package KENTNL::Proxy;
-
+    package KENTNL::Mirror::Double;
     use Call::From qw( call_method_from );
 
-    sub do_work {
-        my ( $self, $frame, @args ) = @_;
-#line 31
-        return KENTNL::Dud->${ \call_method_from($frame) }( 'a_method', @args );
+    sub indirect {
+#line 6000
+        return KENTNL::Mirror::double_indirect(@_);
+#line 72
     }
 
-    sub do_work_2 {
-#line 36
-        return __PACKAGE__->do_work( @_[ 1 .. $#_ ] );
-    }
 }
+subtest "call_method_from(1)" => sub {
+    my $indirect = KENTNL::Mirror->can('indirect');
 
-sub __file() { [caller]->[1] }
+#line 7000
+    my $result = $indirect->('get_self');
+#line 81
+    is( $result, 'KENTNL::Dud', 'Invocant passthrough' );
 
-my %frames = (
-    -1 => [ 'Call::From',    $INC{'Call/From.pm'}, 73 ],
-    0  => [ 'KENTNL::Proxy', __file,               31 ],    #
-    1 => [ 'KENTNL::Proxy', __file, 36 ],                   #
-    2 => [ 'main',          __file, 53 ],                   #
-);
+#line 8000
+    $result = $indirect->( 'get_args', 1, 2, 3, 4 );
+#line 86
+    is_deeply( $result, [ 1, 2, 3, 4 ], 'Argument passthrough' );
 
-for my $frame ( sort keys %frames ) {
-    subtest "call_method_from($frame)" => sub {
-      SKIP: {
-#line 53
-            my $result = KENTNL::Proxy->do_work_2( $frame, qw( hello world ) );
-            note "return context is expected {";
-            note explain $result;
-            is( ref $result, 'HASH', "Got the hash back the method passed" )
-              or skip "Can't compare HASH", 3;
+#line 9000
+    $result = $indirect->('get_caller');
+#line 91
+    is_deeply( $result, [ 'main', _file, 9000 ],
+        'Caller transferrance worked' );
+};
 
-            subtest "->{args}" => sub {
-              SKIP: {
-                    ok( exists $result->{args}, "args exists" )
-                      or skip "Can't compare args", 2;
+subtest "call_method_from(2)" => sub {
+    my $indirect = KENTNL::Mirror::Double->can('indirect');
 
-                    for ( $result->{args} ) {
+#line 10000
+    my $result = $indirect->('get_self');
+#line 101
+    is( $result, 'KENTNL::Dud', 'Invocant passthrough' );
 
-                        is( ref, "ARRAY", "args is an array" )
-                          or skip "Not an array", 1;
+#line 11000
+    $result = $indirect->( 'get_args', 1, 2, 3, 4 );
+#line 105
+    is_deeply( $result, [ 1, 2, 3, 4 ], 'Argument passthrough' );
 
-                        is_deeply( $_, [qw( hello world )],
-                            "List passed through" );
-                    }
-                }
-            };
-            subtest "->{caller}" => sub {
-              SKIP: {
-                    ok( exists $result->{caller}, "caller exists" )
-                      or skip "Can't compare caller", 4;
-
-                    my $context = $result->{caller};
-                    is( ref $context, "ARRAY", "caller is an array" )
-                      or skip "Not an array", 3;
-
-                    is(
-                        $context->[0],
-                        $frames{$frame}->[0],
-                        "Spoofed namespace exists"
-                    );
-                    is(
-                        $context->[1],
-                        $frames{$frame}->[1],
-                        "Path passed through as-is"
-                    );
-                    is(
-                        $context->[2],
-                        $frames{$frame}->[2],
-                        "line directive in proxy not overridden"
-                    );
-
-                }
-            };
-            subtest '->{self}' => sub {
-              SKIP: {
-                    ok( exists $result->{self}, "self exists" )
-                      or skip "Can't compare self", 1;
-                    is( $result->{self}, 'KENTNL::Dud',
-                        'Invocant passed through' );
-                }
-            };
-
-        }
-      }
-}
+#line 12000
+    $result = $indirect->('get_caller');
+#line 111
+    is_deeply(
+        $result,
+        [ 'main', _file, 12000 ],
+        'Caller transferrance worked'
+    );
+};
 done_testing;
 
