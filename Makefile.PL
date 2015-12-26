@@ -22,6 +22,7 @@ my %META = (
         build => { requires => {} },
         test  => {
             requires => {
+                'constant'   => 0,
                 'Test::More' => 0,
             }
         },
