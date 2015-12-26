@@ -71,19 +71,16 @@ my $method_trampoline_cache   = {};
 my $function_trampoline_cache = {};
 
 sub call_method_from {
-    return $method_trampoline_cache->{ _cache_key( _to_caller( $_[0] ) ) } ||=
-      _gen_sub(
-        _prelude( _to_caller( $_[0] ) ),
-        q[ $_[0]->${\$_[1]}( @_[2..$#_ ] ) ]
-      );
+    my @caller = _to_caller( $_[0] );
+    return ( $method_trampoline_cache->{ _cache_key(@caller) } ||=
+          _gen_sub( _prelude(@caller), q[ $_[0]->${\$_[1]}( @_[2..$#_ ] ) ] ) );
 }
 
 sub call_function_from {
-    return $function_trampoline_cache->{ _cache_key( _to_caller( $_[0] ) ) }
-      ||= _gen_sub(
-        _prelude( _to_caller( $_[0] ) ),
-        q[ _fun_can($_[1])->( @_[2..$#_ ] ) ]
-      );
+    my @caller = _to_caller( $_[0] );
+    return ( $function_trampoline_cache->{ _cache_key(@caller) } ||=
+          _gen_sub( _prelude(@caller), q[ _fun_can($_[1])->( @_[2..$#_ ] ) ] )
+    );
 }
 
 =head1 NAME
