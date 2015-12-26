@@ -78,8 +78,11 @@ sub call_method_from {
 
 sub call_function_from {
     my @caller = _to_caller( $_[0] );
-    return ( $function_trampoline_cache->{ _cache_key(@caller) } ||=
-          _gen_sub( _prelude(@caller), q[ _fun_can($_[1])->( @_[2..$#_ ] ) ] )
+    return (
+        $function_trampoline_cache->{ _cache_key(@caller) } ||= _gen_sub(
+            _prelude(@caller),
+            __PACKAGE__ . q[::_fun_can($_[0])->( @_[1..$#_ ] ) ]
+        )
     );
 }
 
