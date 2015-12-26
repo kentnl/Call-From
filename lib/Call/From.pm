@@ -16,19 +16,20 @@ our $_call_from = sub {
 };
 
 sub _to_caller {
-    my ($ctx) = @_;
+    my ( $ctx, $offset ) = @_;
+
+    # +1 because this function is internal, and we dont
+    # want Call::From
+    $offset = 1 unless defined $offset;
 
     # Numeric special case first because caller is different
     if ( defined $ctx and not ref $ctx and $ctx =~ /^-?\d+$/ ) {
 
-        # +1 because this function is internal, and we dont
-        # want Call::From
-        my (@call) = caller( $ctx + 1 );
+        my (@call) = caller( $ctx + $offset );
         return @call[ 0 .. 2 ];
     }
 
-    # +1 ...
-    my (@call) = caller(1);
+    my (@call) = caller($offset);
 
     # _to_caller() returns the calling context of call_method_from
     return @call[ 0 .. 2 ] if not defined $ctx;
