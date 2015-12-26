@@ -39,16 +39,17 @@ use Test::More;
 
 sub __file() { [caller]->[1] }
 
-my @frames = (
-    [ 'KENTNL::Proxy', __file, 31 ],    #
-    [ 'KENTNL::Proxy', __file, 36 ],    #
-    [ 'main',          __file, 52 ],    #
+my %frames = (
+    -1 => [ 'Call::From',    $INC{'Call/From.pm'}, 73 ],
+    0  => [ 'KENTNL::Proxy', __file,               31 ],    #
+    1 => [ 'KENTNL::Proxy', __file, 36 ],                   #
+    2 => [ 'main',          __file, 53 ],                   #
 );
 
-for my $frame ( 0, 1, 2 ) {
+for my $frame ( sort keys %frames ) {
     subtest "call_method_from($frame)" => sub {
       SKIP: {
-#line 52
+#line 53
             my $result = KENTNL::Proxy->do_work_2( $frame, qw( hello world ) );
             note "return context is expected {";
             note explain $result;
@@ -81,17 +82,17 @@ for my $frame ( 0, 1, 2 ) {
 
                     is(
                         $context->[0],
-                        $frames[$frame]->[0],
+                        $frames{$frame}->[0],
                         "Spoofed namespace exists"
                     );
                     is(
                         $context->[1],
-                        $frames[$frame]->[1],
+                        $frames{$frame}->[1],
                         "Path passed through as-is"
                     );
                     is(
                         $context->[2],
-                        $frames[$frame]->[2],
+                        $frames{$frame}->[2],
                         "line directive in proxy not overridden"
                     );
 
