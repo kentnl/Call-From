@@ -29,6 +29,7 @@ my %META = (
         runtime => {
             requires => {
                 'Exporter' => 0,
+                'perl'     => '5.006',
             }
         },
         develop => {
