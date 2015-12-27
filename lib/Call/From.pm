@@ -50,7 +50,6 @@ sub _prelude {
     my ( $package, $file, $line ) = @_;
     return qq[package $package;\n] . qq[#line $line \"$file\"\n];
 }
-sub _cache_key { join qq[\0], @_ }
 
 sub _fun_can {
     return $_[0] if 'CODE' eq ref $_[0];
@@ -72,14 +71,14 @@ my $function_trampoline_cache = {};
 
 sub call_method_from {
     my @caller = _to_caller( $_[0] );
-    return ( $method_trampoline_cache->{ _cache_key(@caller) } ||=
+    return ( $method_trampoline_cache->{ join qq[\0], @caller } ||=
           _gen_sub( _prelude(@caller), q[ $_[0]->${\$_[1]}( @_[2..$#_ ] ) ] ) );
 }
 
 sub call_function_from {
     my @caller = _to_caller( $_[0] );
     return (
-        $function_trampoline_cache->{ _cache_key(@caller) } ||= _gen_sub(
+        $function_trampoline_cache->{ join qq[\0], @caller } ||= _gen_sub(
             _prelude(@caller),
             __PACKAGE__ . q[::_fun_can($_[0])->( @_[1..$#_ ] ) ]
         )
