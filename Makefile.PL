@@ -59,6 +59,7 @@ my %META = (
         },
         license => ['http://dev.perl.org/licenses/'],
     },
+    x_authority => "cpan:KENTNL",
 );
 
 my %MM_ARGS = ();
