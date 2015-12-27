@@ -100,6 +100,37 @@ Call::From contains a collection of short utility functions to ease calling
 functions and methods from faked calling contexts without requiring arcane
 knowledge of Perl eval tricks.
 
+=head1 EXPORTS
+
+The following functions and variables are exportable on request.
+
+=head2 C<call_method_from>
+
+  my $function = call_method_from( CONTEXT_SPEC );
+  $invocant->$function( method_name => @args );
+
+Alternatively:
+
+  $invocant->${ \call_method_from( CONTEXT_SPEC }( method_name => @args );
+
+=head2 C<call_function_from>
+
+  my $function = call_function_from( CONTEXT_SPEC );
+  $function->( "Class::Name::function" , @args );
+
+Alternatively:
+
+  my $function = call_function_from( CONTEXT_SPEC );
+  $function->( Class::Name->can('function') , @args );
+
+Or
+
+  call_function_from( CONTEXT_SPEC )->( "Class::Name::function", @args );
+
+=head2 C<$_call_from>
+
+  $invocant->$_call_from( CONTEXT_SPEC, method_name => @args );
+
 =head1 SPECIFYING A CALLING CONTEXT
 
 Calling contexts can be specified in a number of ways.
