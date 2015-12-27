@@ -65,7 +65,18 @@ my $prereqr = KENTNL::Prereqr->new(
 my ( $prereqs, $provided ) = $prereqr->collect;
 
 use Module::CPANfile;
+use Data::Dumper qw();
+use CPAN::Meta::Converter;
+use Path::Tiny qw( path );
 
 my $cpanfile =
   Module::CPANfile->from_prereqs( $prereqr->prereqs->as_string_hash );
 $cpanfile->save('cpanfile');
+
+my $dumper = Data::Dumper->new( [] );
+$dumper->Terse(1)->Sortkeys(1)->Indent(1)->Useqq(1)->Quotekeys(0);
+path('maint/provided.pl')->spew_raw(
+    $dumper->Values(
+        [ CPAN::Meta::Converter::_dclone( $provided->{runtime} ) ]
+    )->Dump
+);

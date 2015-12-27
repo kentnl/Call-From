@@ -1,7 +1,9 @@
 on develop => sub {
+    requires 'CPAN::Meta::Converter';
     requires 'CPAN::Meta::Prereqs';
     requires 'Carp';
     requires 'Config';
+    requires 'Data::Dumper';
     requires 'Exporter';
     requires 'ExtUtils::MM';
     requires 'ExtUtils::MakeMaker';
@@ -14,6 +16,7 @@ on develop => sub {
     requires 'Module::CPANfile';
     requires 'Module::Metadata';
     requires 'PIR';
+    requires 'Path::Tiny';
     requires 'Perl::PrereqScanner';
     requires 'base';
     requires 'lib';

@@ -24,24 +24,27 @@ my %META = (
         runtime => { requires => {} },
         develop => {
             requires => {
-                'CPAN::Meta::Prereqs' => 0,
-                'Carp'                => 0,
-                'Config'              => 0,
-                'Exporter'            => 0,
-                'ExtUtils::MM'        => 0,
-                'ExtUtils::MakeMaker' => 0,
-                'ExtUtils::Manifest'  => 0,
-                'File::Find'          => 0,
-                'File::Path'          => 0,
-                'File::Spec'          => 0,
-                'File::Temp'          => 0,
-                'Getopt::Long'        => 0,
-                'Module::CPANfile'    => 0,
-                'Module::Metadata'    => 0,
-                'PIR'                 => 0,
-                'Perl::PrereqScanner' => 0,
-                'base'                => 0,
-                'perl'                => '5.006',
+                'CPAN::Meta::Converter' => 0,
+                'CPAN::Meta::Prereqs'   => 0,
+                'Carp'                  => 0,
+                'Config'                => 0,
+                'Data::Dumper'          => 0,
+                'Exporter'              => 0,
+                'ExtUtils::MM'          => 0,
+                'ExtUtils::MakeMaker'   => 0,
+                'ExtUtils::Manifest'    => 0,
+                'File::Find'            => 0,
+                'File::Path'            => 0,
+                'File::Spec'            => 0,
+                'File::Temp'            => 0,
+                'Getopt::Long'          => 0,
+                'Module::CPANfile'      => 0,
+                'Module::Metadata'      => 0,
+                'PIR'                   => 0,
+                'Path::Tiny'            => 0,
+                'Perl::PrereqScanner'   => 0,
+                'base'                  => 0,
+                'perl'                  => '5.006',
             }
         },
     },
@@ -60,6 +63,11 @@ my %META = (
         license => ['http://dev.perl.org/licenses/'],
     },
     x_authority => "cpan:KENTNL",
+    (
+          ( !-f 'META.yml' and -f 'maint/provided.pl' )
+        ? ( provides => ( do 'maint/provided.pl' or die $@ ) )
+        : ()
+    )
 );
 
 my %MM_ARGS = ();
