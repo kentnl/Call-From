@@ -46,11 +46,6 @@ sub _to_caller {
 
 }
 
-sub _prelude {
-    my ( $package, $file, $line ) = @_;
-    return qq[package $package;\n] . qq[#line $line \"$file\"\n];
-}
-
 sub _fun_can {
     return $_[0] if 'CODE' eq ref $_[0];
     my ( $package, $function ) = $_[0] =~ /\A(.*?)::([^:]+)\z/;
@@ -58,12 +53,15 @@ sub _fun_can {
 }
 
 sub _gen_sub {
-    my ( $prelude, $code ) = @_;
-    my $sub_code = $prelude . 'sub {' . $code . '};';
+    my ( $package, $file, $line, $code ) = @_;
+    my $sub_code =
+        qq[package $package;\n]
+      . qq[#line $line \"$file\"\n] . 'sub {'
+      . $code . '};';
     local $@;
     my $sub = eval $sub_code;
     $@ or return $sub;
-    die "Can't compile trampoline: $@\n code => $sub_code";
+    die "Can't compile trampoline for $package: $@\n code => $sub_code";
 }
 
 my $method_trampoline_cache   = {};
@@ -72,15 +70,14 @@ my $function_trampoline_cache = {};
 sub call_method_from {
     my @caller = _to_caller( $_[0] );
     return ( $method_trampoline_cache->{ join qq[\0], @caller } ||=
-          _gen_sub( _prelude(@caller), q[ $_[0]->${\$_[1]}( @_[2..$#_ ] ) ] ) );
+          _gen_sub( @caller, q[ $_[0]->${\$_[1]}( @_[2..$#_ ] ) ] ) );
 }
 
 sub call_function_from {
     my @caller = _to_caller( $_[0] );
     return (
         $function_trampoline_cache->{ join qq[\0], @caller } ||= _gen_sub(
-            _prelude(@caller),
-            __PACKAGE__ . q[::_fun_can($_[0])->( @_[1..$#_ ] ) ]
+            @caller, __PACKAGE__ . q[::_fun_can($_[0])->( @_[1..$#_ ] ) ]
         )
     );
 }
