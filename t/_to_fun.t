@@ -17,8 +17,9 @@ is( _to_fun("main::_to_fun"),
     \&_to_fun, "Fully qualified functions can be resolved" );
 is( _to_fun("Call::From::_to_fun"),
     \&_to_fun, "Fully qualified functions can be resolved" );
-is( eval { _to_fun(undef) },
-    undef, "Undef is no function" );
+is( eval { _to_fun(undef) }, undef, "Undef is no function" );
+is( eval { _to_fun("Unknown::") },
+    undef, q[no-length function names are invalid] );
 
 done_testing;
 
