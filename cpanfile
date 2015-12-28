@@ -4,7 +4,7 @@ requires 'strict';
 requires 'warnings';
 
 on test => sub {
-    requires 'Test::More';
+    requires 'Test::More', '0.87_01';
     requires 'constant';
     requires 'strict';
     requires 'warnings';
