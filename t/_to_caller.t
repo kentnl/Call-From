@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More 0.95_02;    # subtest w/ no plan
 
 # ABSTRACT: Check _to_caller() using implied "fake this many levels up" behaviour
 
