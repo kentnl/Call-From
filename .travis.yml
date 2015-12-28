@@ -1,0 +1,23 @@
+---
+before_install:
+  - eval $(curl https://travis-perl.github.io/init) --auto
+env:
+  - AUTHOR_TESTING=0
+language: perl
+matrix:
+  include:
+    - env: COVERAGE=1
+      perl: 5.18
+
+perl:
+  - 5.6.2
+  - 5.8.1
+  - 5.8.8
+  - 5.8
+  - 5.10
+  - 5.12
+  - 5.14
+  - 5.16
+  - 5.20
+  - dev
+sudo: false
