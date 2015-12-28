@@ -53,7 +53,10 @@ sub _to_fun {
     if ( defined $_[0]
         and my ( $package, $function ) = $_[0] =~ /\A(.*?)::([^:]+)\z/ )
     {
-        if ( my $sub = "::$package"->can($function) ) {
+        # q[::Foo]->can() is invalid before 5.18
+        # so map it to q[main::Foo]
+        $package = 'main' if not defined $package or not length $package;
+        if ( my $sub = "$package"->can($function) ) {
             return $sub;
         }
         die "Can't resolve function <$function> in package <$package>";
