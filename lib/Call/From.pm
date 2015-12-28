@@ -48,11 +48,14 @@ sub _to_caller {
 
 sub _to_fun {
     return $_[0] if 'CODE' eq ref $_[0];
-    if ( my ( $package, $function ) = $_[0] =~ /\A(.*?)::([^:]+)\z/ ) {
-      if( my $sub = "::$package"->can($function) ) {
-        return $sub;
-      }
-      die "Can't resolve function <$function> in package <$package>";
+
+    if ( defined $_[0]
+        and my ( $package, $function ) = $_[0] =~ /\A(.*?)::([^:]+)\z/ )
+    {
+        if ( my $sub = "::$package"->can($function) ) {
+            return $sub;
+        }
+        die "Can't resolve function <$function> in package <$package>";
     }
     my $arg = defined $_[0] ? qq["$_[0]"] : q[undef];
     die "Can't automatically determine package and function from $arg";
