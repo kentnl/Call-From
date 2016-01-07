@@ -71,7 +71,7 @@ sub _gen_sub {
         qq[package $package;\n]
       . qq[#line $line "$file"\n] . 'sub {'
       . $code . '};';
-    local $@;
+    local $@ = undef;
     my $sub = eval $sub_code;
     $@ or return $sub;
     die "Can't compile trampoline for $package: $@\n code => $sub_code";
