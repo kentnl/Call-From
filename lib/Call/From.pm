@@ -69,7 +69,7 @@ sub _gen_sub {
     my ( $package, $file, $line, $code ) = @_;
     my $sub_code =
         qq[package $package;\n]
-      . qq[#line $line \"$file\"\n] . 'sub {'
+      . qq[#line $line "$file"\n] . 'sub {'
       . $code . '};';
     local $@;
     my $sub = eval $sub_code;
