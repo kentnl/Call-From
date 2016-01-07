@@ -58,6 +58,7 @@ my %META = (
                 'Test::EOL'               => 0,
                 'Test::Kwalitee'          => '1.21',
                 'Test::More'              => '0.96',
+                'Test::Perl::Critic'      => 0,
                 'Test::Pod'               => '1.41',
                 'Test::Pod::Coverage'     => '1.08',
                 'base'                    => 0,

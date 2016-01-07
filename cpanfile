@@ -35,6 +35,7 @@ on develop => sub {
     requires 'Test::EOL';
     requires 'Test::Kwalitee', '1.21';
     requires 'Test::More', '0.96';
+    requires 'Test::Perl::Critic';
     requires 'Test::Pod', '1.41';
     requires 'Test::Pod::Coverage', '1.08';
     requires 'base';

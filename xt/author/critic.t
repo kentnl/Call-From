@@ -4,8 +4,5 @@ use strict;
 use warnings;
 
 use Test::More;
-
-eval "use Test::Perl::Critic";
-plan skip_all => 'Test::Perl::Critic required to criticise code' if $@;
-Test::Perl::Critic->import( -profile => "perlcritic.rc" ) if -e "perlcritic.rc";
+use Test::Perl::Critic ( -profile => 'perlcritic.rc' );
 all_critic_ok();
