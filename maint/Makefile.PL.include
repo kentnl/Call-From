@@ -5,3 +5,7 @@ use Distar;
 use ExtUtils::MakeMaker 6.58;
 
 author 'Kent Fredric <kentnl@cpan.org>';
+
+manifest_include '' => 'perlcritic.rc';
+
+1;
