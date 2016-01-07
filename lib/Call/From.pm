@@ -95,6 +95,8 @@ sub call_function_from {
     );
 }
 
+1;
+
 =head1 NAME
 
 Call::From - Call functions/methods with a fake caller()
