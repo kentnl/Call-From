@@ -4,7 +4,7 @@ use warnings;
 
 package Call::From;
 
-our $VERSION   = '0.001000';
+our $VERSION   = '0.001001';
 our $AUTHORITY = 'cpan:KENTNL';
 
 use Exporter qw();
