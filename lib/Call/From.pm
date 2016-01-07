@@ -90,7 +90,7 @@ sub call_function_from {
     my @caller = _to_caller( $_[0] );
     return (
         $function_trampoline_cache->{ join qq[\0], @caller } ||= _gen_sub(
-            @caller, __PACKAGE__ . q[::_to_fun($_[0])->( @_[1..$#_ ] ) ]
+            @caller, __PACKAGE__ . q[::_to_fun($_[0])->( @_[1..$#_ ] ) ],
         )
     );
 }
