@@ -218,6 +218,55 @@ Subsequently:
   call_method_from(['Package','file'])
     == call_method_from(['Package','file', __LINE__])
 
+=head1 SEE ALSO
+
+The following modules are similar in some way to C<Call::From>
+
+=over 4
+
+=item * L<< C<Import::Into>|Import::Into >>
+
+C<Import::Into> is really inspiration that this module borrowed from. It contains the elegant
+trick of using C<eval> to compile a kind of C<trampoline> or L<< C<thunk>|https://en.wikipedia.org/wiki/Thunk >>
+which contained the magical C<eval> spice that allows this behavior to work.
+
+As such, this module had a big help from the authors and maintainers of C<Import::Into> in mimicking
+and generalizing its utility in contexts other than C<import>
+
+If C<Import::Into> did not exist, you could use this module in its place:
+
+    require Module;
+    Module->${\call_method_from( $Into_Package )}( import => @IMPORT_ARGS );
+
+However, it does exist, and should you need such a functionality, it is recommended instead of this module.
+
+=item * L<< C<Scope::Upper>|Scope::Upper >>
+
+This module is similar to C<Scope::Upper> in that it can be used to "hide" who C<caller> is from
+a calling context.
+
+However, C<Scope::Upper> is more fancy, and uses Perl Guts in order to be able to actually hide
+the entire stack frame, regardless of how many frames up you look with C<caller($N_FRAME)>.
+
+C<Call::From> is much simpler in that it can only I<add> stack frames to the caller, and then,
+it adds redundant frames in performing its task.
+
+This is sufficient for fooling something that only uses a simple C<caller()> call, but is insufficient
+if you need to hide entire call chains. In fact, I personally see it as a feature that you can still see
+the true caller history in a full stack-trace, because the last place you want to be fooled is when you're debugging
+whether or not you've been fooled.
+
+But its worth pointing out that at the time of this writing, changes are pending in Perl 5 to L<< rework the entire
+stack system|http://www.nntp.perl.org/group/perl.perl5.porters/2016/01/msg233631.html >>.
+
+This change L<< may break C<Scope::Upper>|http://www.nntp.perl.org/group/perl.perl5.porters/2016/01/msg233633.html >>
+in ways that might not be fixable.
+
+In the event this happens, C<Call::From> might be a suitable alternative if you only need to spoof a stack frame
+and don't care that the full stack is still there.
+
+=back
+
 =head1 AUTHOR
 
 Kent Fredric <kentnl@cpan.org>
