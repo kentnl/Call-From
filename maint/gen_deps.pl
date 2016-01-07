@@ -12,6 +12,8 @@ use lib 'maint/lib';
 
 use KENTNL::Prereqr;
 
+my $ignore = PIR->new->name('perlcritic.rc.gen.pl');
+
 my $prereqr = KENTNL::Prereqr->new(
     rules => [
         {
@@ -40,13 +42,13 @@ my $prereqr = KENTNL::Prereqr->new(
             provides_to => [ 'runtime', 'test' ],
         },
         {
-            rule     => PIR->new->perl_file,
-            start_in => [ 'maint', 'Distar' ],
-            deps_to  => [ 'develop', 'requires' ],
+            rule     => PIR->new->perl_file->not($ignore),
+            start_in => [ 'maint', 'Distar','xt' ],
+            deps_to  => [ 'develop', 'requires'],
         },
         {
-            rule        => PIR->new->perl_module,
-            start_in    => [ 'maint', 'Distar' ],
+            rule => PIR->new->perl_module->not($ignore),
+            start_in    => [ 'maint', 'Distar', 'xt' ],
             provides_to => ['develop'],
         },
         {

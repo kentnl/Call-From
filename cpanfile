@@ -30,6 +30,13 @@ on develop => sub {
     requires 'PIR';
     requires 'Path::Tiny';
     requires 'Perl::PrereqScanner';
+    requires 'Pod::Coverage::TrustPod';
+    requires 'Test::CPAN::Changes';
+    requires 'Test::EOL';
+    requires 'Test::Kwalitee', '1.21';
+    requires 'Test::More', '0.96';
+    requires 'Test::Pod', '1.41';
+    requires 'Test::Pod::Coverage', '1.08';
     requires 'base';
     requires 'lib';
     requires 'perl', '5.006';
